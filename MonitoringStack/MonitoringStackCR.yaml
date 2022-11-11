@@ -1,7 +1,7 @@
 apiVersion: monitoring.rhobs/v1alpha1
 kind: MonitoringStack
 metadata:
-  name: hypershift-monitoring-stack
+  name: hypershift-mgmt-monitoring-stack
 spec:
   logLevel: debug
   namespaceSelector:
@@ -10,7 +10,7 @@ spec:
         operator: Exists
   prometheusConfig:
     externalLabels:
-      hypershift_cluster_id_test: sbasabat-mgmt
+      hypershift_cluster_id: sbasabat-mgmt
       region: us-east-1
     remoteWrite:
       - queueConfig:
@@ -22,9 +22,6 @@ spec:
           minBackoff: 30ms
           minShards: 1
         url: http://token-refresher.openshift-observability-operator.svc.cluster.local
-    externalLabels:
-      hypershift_cluster_id_test: test-cluster
-      region: us-east-1
     replicas: 2
   resources:
     limits:
