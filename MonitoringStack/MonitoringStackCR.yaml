@@ -1,13 +1,15 @@
 apiVersion: monitoring.rhobs/v1alpha1
 kind: MonitoringStack
 metadata:
-  name: hypershift-mgmt-monitoring-stack
+  name: hshift-ms
 spec:
   logLevel: debug
   namespaceSelector:
     matchExpressions:
       - key: hypershift.openshift.io/hosted-control-plane
         operator: Exists
+  alertmanagerConfig:
+    disabled: true
   prometheusConfig:
     externalLabels:
       hypershift_cluster_id: sbasabat-mgmt
@@ -23,11 +25,3 @@ spec:
           minShards: 1
         url: http://token-refresher.openshift-observability-operator.svc.cluster.local
     replicas: 2
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512M
-    requests:
-      cpu: 100m
-      memory: 256M
-  retention: 1d

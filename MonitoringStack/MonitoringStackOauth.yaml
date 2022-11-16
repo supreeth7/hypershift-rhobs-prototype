@@ -1,0 +1,29 @@
+apiVersion: monitoring.rhobs/v1alpha1
+kind: MonitoringStack
+metadata:
+  name: hshift-ms
+spec:
+  namespaceSelector:
+    matchExpressions:
+      - key: hypershift.openshift.io/hosted-control-plane
+        operator: Exists
+  replicas: 2
+  logLevel: debug
+  alertmanagerConfig:
+    disabled: true
+  prometheusConfig:
+    externalLabels:
+      hypershift_cluster_id: sbasabat-mgmt
+      region: us-east-1
+    remoteWrite:
+    - url: https://observatorium-mst.api.stage.openshift.com/api/metrics/v1/hypershift-platform/api/v1/receive
+      oauth2:
+        clientId:
+          secret:
+            key: client-id
+            name: rhobs-observatorium-credentials
+        clientSecret:
+            key: client-secret
+            name: rhobs-observatorium-credentials
+        tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+   
