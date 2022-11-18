@@ -26,4 +26,10 @@ oc get servicemonitors.monitoring.coreos -o yaml | grep '^[- ] ' | sed -e 's/^- 
 oc get podmonitors.monitoring.coreos -o yaml | grep '^[- ] ' | sed -e 's/^- /---\n/g' -e 's/^  //g' -e 's@monitoring.coreos.com/v1@monitoring.rhobs/v1@g' | oc create -f -
 ```
 
+- For Observability Operator to be able to scrape metrics from HCP namespace, it should have access to all pods in the HCP namespace. The _openshift-monitoring_ network policy in HCP namespaces allows ingress traffic to all of its pods from all pods belonging to the namespace which has the `network.openshift.io/policy-group: monitoring label`. Label the namespace:
+
+```bash
+oc label namespace openshift-observability-operator network.openshift.io/policy-group=monitoring
+```
+
 - If you did everything right, you will now be able to see your HCPs' metrics via <https://promlens.stage.devshift.net>.

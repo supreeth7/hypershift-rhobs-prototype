@@ -3,12 +3,14 @@ kind: MonitoringStack
 metadata:
   name: hshift-ms
 spec:
+  resourceSelector: {}
   namespaceSelector:
     matchExpressions:
       - key: hypershift.openshift.io/hosted-control-plane
         operator: Exists
   replicas: 2
   logLevel: debug
+  retention: 1d
   alertmanagerConfig:
     disabled: true
   prometheusConfig:

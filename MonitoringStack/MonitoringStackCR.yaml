@@ -3,11 +3,14 @@ kind: MonitoringStack
 metadata:
   name: hshift-ms
 spec:
-  logLevel: debug
+  resourceSelector: {}
   namespaceSelector:
     matchExpressions:
       - key: hypershift.openshift.io/hosted-control-plane
         operator: Exists
+  replicas: 2
+  retention: 1d
+  logLevel: debug
   alertmanagerConfig:
     disabled: true
   prometheusConfig:
@@ -16,12 +19,15 @@ spec:
       region: us-east-1
     remoteWrite:
       - queueConfig:
-          batchSendDeadline: 60s
-          capacity: 2500
-          maxBackoff: 5s
-          maxSamplesPerSend: 500
-          maxShards: 1000
-          minBackoff: 30ms
-          minShards: 1
+          max_samples_per_send: 500
+          batch_send_deadline: 60s
         url: http://token-refresher.openshift-observability-operator.svc.cluster.local
-    replicas: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512M
+    requests:
+      cpu: 100m
+      memory: 256M
+  
+
