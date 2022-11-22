@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    hive.openshift.io/managed: "true"
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    enableUserWorkload: true
+    prometheusK8s:
+      remoteWrite:
+        - url: https://observatorium-mst.api.stage.openshift.com/api/metrics/v1/hypershift-platform/api/v1/receive
+          oauth2:
+            clientId:
+              secret:
+                key: client-id
+                name: rhobs-observatorium-credentials
+            clientSecret:
+                key: client-secret
+                name: rhobs-observatorium-credentials
+            tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+          writeRelabelConfigs:
+          - sourceLabels:
+            - __tmp_openshift_cluster_id__
+            targetLabel: cluster_id
+            action: replace
+          queueConfig:
+            capacity: 2500
+            maxShards: 1000
+            minShards: 1
+            maxSamplesPerSend: 500
+            batchSendDeadline: 60s
+            minBackoff: 30ms
+            maxBackoff: 5s
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      retention: 11d
+      retentionSize: 90GB
+      volumeClaimTemplate:
+        metadata:
+          name: prometheus-data
+        spec:
+          resources:
+            requests:
+              storage: 100Gi
+    alertmanagerMain:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      volumeClaimTemplate:
+        metadata:
+          name: alertmanager-data
+        spec:
+          resources:
+            requests:
+              storage: 10Gi
+    telemeterClient:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      telemeterServerURL: https://infogw.api.stage.openshift.com
+    prometheusOperator:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    grafana:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    k8sPrometheusAdapter:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    kubeStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    openshiftStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    thanosQuerier:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists

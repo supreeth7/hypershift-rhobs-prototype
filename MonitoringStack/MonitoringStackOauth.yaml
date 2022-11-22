@@ -28,4 +28,11 @@ spec:
             key: client-secret
             name: rhobs-observatorium-credentials
         tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 512M
    
