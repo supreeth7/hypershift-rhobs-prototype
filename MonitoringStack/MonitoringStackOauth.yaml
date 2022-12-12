@@ -2,6 +2,7 @@ apiVersion: monitoring.rhobs/v1alpha1
 kind: MonitoringStack
 metadata:
   name: hshift-ms
+  namespace: openshift-observability-operator
 spec:
   resourceSelector: {}
   namespaceSelector:
@@ -15,19 +16,36 @@ spec:
     disabled: true
   prometheusConfig:
     externalLabels:
-      hypershift_cluster_id: sbasabat-mgmt
+      hypershift_cluster_id: 20eund6b63h6gtkliv049181ne2pcplf
       region: us-east-1
+      env: staging
     remoteWrite:
-    - url: https://observatorium-mst.api.stage.openshift.com/api/metrics/v1/hypershift-platform/api/v1/receive
+    - url: https://observatorium-mst.api.openshift.com/api/metrics/v1/hypershift-platform/api/v1/receive
       oauth2:
         clientId:
           secret:
             key: client-id
-            name: rhobs-observatorium-credentials
+            name: rhobs-observatorium-credential
         clientSecret:
             key: client-secret
-            name: rhobs-observatorium-credentials
+            name: rhobs-observatorium-credential
         tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+    - url: https://infogw.api.stage.openshift.com/metrics/v1/receive
+      authorization:
+        type: Bearer
+        credentials:
+          name: telemeter-client
+          key: token
+      queueConfig:
+        capacity: 30000
+        maxSamplesPerSend: 10000
+        batchSendDeadline: 1m
+        minBackoff: 1s
+        maxBackoff: 256s
+      writeRelabelConfigs:
+      - action: keep
+        regex: cluster_version
+        sourceLabels: [__name__]
   resources:
     limits:
       cpu: 500m
