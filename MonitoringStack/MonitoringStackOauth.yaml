@@ -30,22 +30,6 @@ spec:
             key: client-secret
             name: rhobs-observatorium-credential
         tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-    - url: https://infogw.api.stage.openshift.com/metrics/v1/receive
-      authorization:
-        type: Bearer
-        credentials:
-          name: telemeter-client
-          key: token
-      queueConfig:
-        capacity: 30000
-        maxSamplesPerSend: 10000
-        batchSendDeadline: 1m
-        minBackoff: 1s
-        maxBackoff: 256s
-      writeRelabelConfigs:
-      - action: keep
-        regex: cluster_version
-        sourceLabels: [__name__]
   resources:
     limits:
       cpu: 500m
