@@ -20,7 +20,7 @@ spec:
       region: us-east-1
       env: staging
     remoteWrite:
-    - url: https://infogw-proxy.api.stage.openshift.com/metrics/v1/receive
+    - url: https://infogw.api.stage.openshift.com/metrics/v1/receive
       authorization:
         type: Bearer
         credentials:
