@@ -16,11 +16,11 @@ spec:
     disabled: true
   prometheusConfig:
     externalLabels:
-      hypershift_cluster_id: 20eund6b63h6gtkliv049181ne2pcplf
+      hypershift_cluster_id: d77eb6b4-a809-4f4f-a48c-7d3bb39d0f60
       region: us-east-1
       env: staging
     remoteWrite:
-    - url: https://observatorium-mst.api.openshift.com/api/metrics/v1/hypershift-platform/api/v1/receive
+    - url: https://rhobs.rhobsp02ue1.api.openshift.com/api/metrics/v1/hypershift-platform/api/v1/receive
       oauth2:
         clientId:
           secret:
@@ -30,6 +30,22 @@ spec:
             key: client-secret
             name: rhobs-observatorium-credential
         tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+    - url: https://infogw.api.stage.openshift.com/metrics/v1/receive
+      authorization:
+        type: Bearer
+        credentials:
+          name: telemeter-client
+          key: token
+      queueConfig:
+        capacity: 30000
+        maxSamplesPerSend: 10000
+        batchSendDeadline: 1m
+        minBackoff: 1s
+        maxBackoff: 256s
+      writeRelabelConfigs:
+      - sourceLabels: [__name__]
+        action: keep
+        regex: cluster_version
   resources:
     limits:
       cpu: 500m
