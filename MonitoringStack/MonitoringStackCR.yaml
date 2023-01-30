@@ -30,25 +30,25 @@ spec:
         clientSecret:
             key: client-secret
             name: rhobs-observatorium-credential
-        tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-        writeRelabelConfigs:
-        # Matches 'no label'.
-        # Basically: if source is defined already (i.e on the dataplane), keep the label.
-        # Otherwise, use HCP
-        - action: replace
-          regex: $^
-          replacement: HCP
-          sourceLabels:
-          - source
-          targetLabel: source
-        queueConfig:
-          capacity: 2500
-          maxShards: 1000
-          minShards: 1
-          maxSamplesPerSend: 500
-          batchSendDeadline: 60s
-          minBackoff: 30ms
-          maxBackoff: 5s
+      tokenUrl: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+      writeRelabelConfigs:
+      # Matches 'no label'.
+      # Basically: if source is defined already (i.e on the dataplane), keep the label.
+      # Otherwise, use HCP
+      - action: replace
+        regex: $^
+        replacement: HCP
+        sourceLabels:
+        - source
+        targetLabel: source
+      queueConfig:
+        capacity: 2500
+        maxShards: 1000
+        minShards: 1
+        maxSamplesPerSend: 500
+        batchSendDeadline: 60s
+        minBackoff: 30ms
+        maxBackoff: 5s
     - url: https://infogw.api.stage.openshift.com/metrics/v1/receive
       authorization:
         type: Bearer
