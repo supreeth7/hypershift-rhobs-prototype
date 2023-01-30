@@ -17,8 +17,8 @@ spec:
   prometheusConfig:
     enableRemoteWriteReceiver: true
     externalLabels:
-      _mc_id: 
-      region: ced0565a-523a-48da-905c-15759d836158
+      _mc_id: ced0565a-523a-48da-905c-15759d836158
+      region: us-east-1
       env: staging
     remoteWrite:
     - url: https://rhobs.rhobsp02ue1.api.openshift.com/api/metrics/v1/hypershift-platform-staging/api/v1/receive
